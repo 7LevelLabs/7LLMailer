@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
+         version="3.1">
+
+    <enterprise-beans>
+
+        <session>
+            <ejb-name>EMailSenderBean</ejb-name>
+            <ejb-class>ua.ll7.slot7.ll7mailer.EMailSenderBean</ejb-class>
+            <session-type>Stateless</session-type>
+            <!--JavaMail resource-->
+            <resource-ref>
+                <res-ref-name>mail/CAEMailResource</res-ref-name>
+                <res-type>javax.mail.Session</res-type>
+                <injection-target>
+                    <injection-target-class>ua.ll7.slot7.ll7mailer.EMailSenderBean</injection-target-class>
+                    <injection-target-name>session</injection-target-name>
+                </injection-target>
+            </resource-ref>
+        </session>
+
+        <message-driven>
+            <ejb-name>MQListenerBean</ejb-name>
+            <ejb-class>ua.ll7.slot7.ll7mailer.MQListenerBean</ejb-class>
+            <messaging-type>javax.jms.MessageListener</messaging-type>
+            <transaction-type>Container</transaction-type>
+            <message-destination-type>javax.jms.Queue</message-destination-type>
+            <activation-config>
+                <activation-config-property>
+                    <!--Destination-->
+                    <activation-config-property-name>mappedName</activation-config-property-name>
+                    <activation-config-property-value>jms/CAMailerQ</activation-config-property-value>
+                </activation-config-property>
+            </activation-config>
+        </message-driven>
+
+    </enterprise-beans>
+</ejb-jar>
